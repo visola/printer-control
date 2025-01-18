@@ -11,8 +11,6 @@ function App() {
     return <p>isPending...</p>;
   }
 
-  console.log(isPending, data);
-
   return (
     <>
       <p>This is a Banana.</p>
