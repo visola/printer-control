@@ -20,7 +20,7 @@ source ./venv/bin/activate
 To start the server locally use:
 
 ```
-uvicorn main:app --reload
+uvicorn main:app --reload --host 0.0.0.0
 ```
 
 ### Frontend

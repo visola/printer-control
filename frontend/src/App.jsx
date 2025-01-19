@@ -1,24 +1,32 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import './App.css';
 
 function App() {
-  const { data, isPending } = useQuery({
-    queryKey: ['items'],
-    queryFn: () => fetch('/api/items').then((res) => res.json()),
+  const [isLedOn, setIsLedOn] = useState(false);
+
+  const { mutateAsync: toggleLed } = useMutation({
+    mutationFn: () => fetch(
+      '/api/leds',
+      {
+        body: JSON.stringify({ on: !isLedOn }),
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+      },
+    ).then((res) => res.json()),
   });
 
-  if (isPending) {
-    return <p>isPending...</p>;
-  }
+  const onClick = async () => {
+    const resp = await toggleLed();
+    setIsLedOn(resp.on);
+  };
 
   return (
     <>
-      <p>This is a Banana.</p>
-      <ul>
-        {
-          data.map((item) => (<li key={item.id}>{ item.name }</li>))
-        }
-      </ul>
+      <h1 className="title">Led is {isLedOn ? 'On' : 'Off'}</h1>
+      <button className="button" onClick={onClick}>
+        Toggle
+      </button>
     </>
   )
 }
