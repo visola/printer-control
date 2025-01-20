@@ -5,10 +5,11 @@ from pydantic import BaseModel
 
 pixel_pin = board.D18
 num_pixels = 30
+half_pixels = int(num_pixels / 2)
 
 ORDER = neopixel.GRB
 
-pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=1.0, pixel_order=ORDER, auto_write=False)
+pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.1, pixel_order=ORDER, auto_write=False)
 
 class LedState(BaseModel):
 	on: bool
@@ -27,6 +28,20 @@ def out_to_in(color, interval):
 		pixels.show()
 		time.sleep(interval)
 
+def split_from_middle(color, interval):
+	for i in range(half_pixels - 1, -1, -1):
+		pixels[i] = color
+		pixels[num_pixels - i - 1] = color
+		pixels.show()
+		time.sleep(interval)
+
+def join_in_middle(color, interval):
+	for i in range(0, half_pixels):
+		pixels[i] = color
+		pixels[num_pixels - i - 1] = color
+		pixels.show()
+		time.sleep(interval)
+
 def toggle_leds(new_state: LedState):
 	global led_state
 	
@@ -39,9 +54,12 @@ def toggle_leds(new_state: LedState):
 	led_state.on = False
 	return led_state
 
+def get_leds_state():
+	return led_state
+
 def register_endpoints(app):
 	app.router.add_api_route("/leds", toggle_leds, methods=["PUT"])
+	app.router.add_api_route("/leds", get_leds_state, methods=["GET"])
 
 def shutdown_hook():
-	pixels.fill((0, 0, 0))
-	pixels.show()
+	join_in_middle((0, 0, 0), 0.02)

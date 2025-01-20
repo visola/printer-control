@@ -19,3 +19,8 @@ def signal_handler(sig, frame):
 	print('Good bye!')
 
 signal.signal(signal.SIGINT, signal_handler)
+
+leds.join_in_middle((255, 255, 0), 0.05)
+leds.split_from_middle((0, 255, 0), 0.05)
+leds.join_in_middle((255, 255, 255), 0.05)
+leds.split_from_middle((0, 0, 0), 0.05)
