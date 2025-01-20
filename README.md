@@ -45,3 +45,22 @@ npm run watch
 ```
 
 This will publish the files the root `public` folder and updates will be picked up by the FastAPI server.
+
+### Deployment
+
+To deploy the files to the Raspberry Pi, you can run the script `scripts/deploy.sh`.
+This script depends on two variables:
+
+- $SSH_OPTIONS = options to be passed to ssh and scp used to copy files to the RPi, I used `-i /path/to/private_key`
+- $HOST = hostname for your Raspberry Pi
+
+To make sure the server starts after booting up, I added a Systemd configuration file.
+Make sure to update the `printer_control.service` file since it has the path to the start script hardcoded.
+To install this configuration file, you need to copy it over to the `/lib/systemd/system` and then enable it with the following commands:
+
+```
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable printer_control.service
+```
+
+After the next boot, it should start the server.

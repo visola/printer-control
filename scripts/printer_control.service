@@ -1,0 +1,11 @@
+[Unit]
+Description=Printer Control
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/visola/server/start.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

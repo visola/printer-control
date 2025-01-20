@@ -9,7 +9,7 @@ half_pixels = int(num_pixels / 2)
 
 ORDER = neopixel.GRB
 
-pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.1, pixel_order=ORDER, auto_write=False)
+pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=1.0, pixel_order=ORDER, auto_write=False)
 
 class LedState(BaseModel):
 	on: bool
