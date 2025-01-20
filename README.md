@@ -6,6 +6,15 @@ This code contains a FastAPI server that is meant to run in a Raspberry PI (I'm 
 It controls a LED strip with individually addresseable multicolor LEDs and assumes the strip has 30 of them.
 It also assumes there's a camera installed in the RPi and will use that to display images from it.
 
+### Requirements
+
+For the neopixel controller, I got this from [this article](https://learn.adafruit.com/neopixels-on-raspberry-pi/python-usage):
+
+```
+sudo pip3 install rpi_ws281x adafruit-circuitpython-neopixel
+sudo python3 -m pip install --force-reinstall adafruit-blinka
+```
+
 ### Backend
 
 Using FastAPI and Uvicorn you can quickly create a HTTP server with an easy to maintain API and also serve static files.
