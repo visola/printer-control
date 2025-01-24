@@ -28,7 +28,7 @@ function App() {
   return (
     <>
       <h1 className="title">Camera</h1>
-      <img src="/api/camera" alt="webcam" />
+      <img src="/api/camera" alt="webcam" width="1200px" />
       <h1 className="title">Led is {ledState && ledState.on ? 'On' : 'Off'}</h1>
       <button className="button" onClick={() => toggleLed()}>
         Toggle

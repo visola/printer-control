@@ -8,15 +8,6 @@ import cv2
 import io
 
 camera = Picamera2()
-camera.options["quality"] = 95
-camera.options["compress_level"] = 2
-
-config = camera.create_preview_configuration(main={"size": (1920, 1080)})
-camera.align_configuration(config)
-print(config)
-camera.configure(config)
-camera.start()
-
 should_stop = False
 
 def generate_frames():
@@ -25,7 +16,7 @@ def generate_frames():
 			if should_stop:
 				return
 
-			frame = camera.capture_array("main")
+			frame = camera.capture_array()
 			ret, buffer = cv2.imencode('.jpg', frame)
 			frame = buffer.tobytes()
 			yield (b'--frame\r\n'
@@ -34,6 +25,15 @@ def generate_frames():
 	return StreamingResponse(image_stream(), media_type="multipart/x-mixed-replace; boundary=frame")
 
 def register_endpoints(app):
+	camera.options["quality"] = 95
+	camera.options["compress_level"] = 2
+
+	config = camera.create_preview_configuration(main={"size": (1920, 1080)})
+	camera.align_configuration(config)
+	print(config)
+	camera.configure(config)
+	camera.start()
+
 	app.router.add_api_route("/camera", generate_frames, methods=["GET"])
 
 def shutdown_hook():

@@ -46,11 +46,11 @@ def toggle_leds(new_state: LedState):
 	global led_state
 	
 	if new_state.on:
-		in_to_out((255, 255, 255), 0.01)
+		split_from_middle((255, 255, 255), 0.01)
 		led_state.on = True
 		return led_state
 
-	out_to_in((0, 0, 0), 0.01)
+	join_in_middle((0, 0, 0), 0.01)
 	led_state.on = False
 	return led_state
 
