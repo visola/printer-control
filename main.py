@@ -19,9 +19,10 @@ leds.register_endpoints(app_api)
 camera.register_endpoints(app_api)
 
 def signal_handler(sig, frame):
+	print('Shutting down...')
 	leds.shutdown_hook()
 	camera.shutdown_hook()
-	print('Good bye!')
+	print('Shutdown signal handler is done')
 
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)

@@ -2,9 +2,10 @@
 Description=Printer Control
 
 [Service]
-Type=idle
-ExecStart=/home/visola/server/start.sh
+ExecStart=/home/visola/server/start.py
 Restart=on-failure
+Type=idle
+WorkingDirectory=/home/visola/server
 
 [Install]
 WantedBy=multi-user.target

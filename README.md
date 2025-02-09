@@ -29,44 +29,31 @@ $ ssh-copy-id -i ${PATH_TO_PRIVATE_KEY} ${HOST}
 
 It will ask for your SSH password and then never again.
 
-### NeoPixels and sudo
+### Pre-requesites
 
-I tried in many different ways to run the Neopixels library without sudo but wasn't able to.
-If I use pin 19, I get the following message: `Gpio 19 is illegal for LED channel 0`
-If I use pin 10, after enabling SPI, the pixels.py script runs but eventually all LEDs turn white and the script stop responding.
+These are the commands I ran to install all the necessary dependencies.
+They install all the libraries in the system Python, and the last few directly through pip can cause compatibility issues.
+But this is how I got it working.
 
-So instead of solving the sudo problem, I worked on making it work with Virtual Environments.
-To do that you can ask sudo to preserve the venv in the context by adding: `-E env PATH=$PATH` to the sudo command, like this: `sudo -E env PATH=$PATH python3 pixels.py`
-And then, it preserves the virtual environment and all works fine.
+For the picamera2 library:
 
-### Requirements
-
-Install picamera2 using apt-get.
-apt-get is the recommended way to ensure compatibility with libcamera and other libraries.
-Run the following command:
-
-```
-$ sudo apt install -y python3-opencv
-$ sudo apt install -y python3-picamera2 --no-install-recommends
+```bash
+sudo apt update
+sudo apt install -y python3-opencv
+sudo apt install -y python3-picamera2 --no-install-recommends
 ```
 
-Run the deploy script to copy the files into the Raspberry Pi:
+For the web server uvicorn:
 
-```
-$ scripts/deploy.sh
-```
-
-Then create a virtual enviroment and activate it:
-
-```
-$ python3 -m venv ${ENV_NAME}
-$ source ${EVN_NAME}/bin/activate
+```bash
+sudo apt install python3-uvicorn
 ```
 
-Install all dependencies using the requirements.txt file:
+For the LED library:
 
-```
-$ pip install -r requirements.txt
+```bash
+sudo apt install python3-pip
+sudo pip3 install rpi_ws281x adafruit-circuitpython-neopixel --break-system-packages
 ```
 
 ### Backend
@@ -75,7 +62,7 @@ Using FastAPI and Uvicorn you can quickly create a HTTP server with an easy to m
 
 To start the server locally use:
 
-```
+```bash
 uvicorn main:app --reload --host 0.0.0.0
 ```
 
@@ -87,7 +74,7 @@ Publishes the assets to the `./public` so that it can be served statically from 
 
 To develop locally, run:
 
-```
+```bash
 npm run watch
 ```
 
@@ -105,9 +92,10 @@ To make sure the server starts after booting up, I added a Systemd configuration
 Make sure to update the `printer_control.service` file since it has the path to the start script hardcoded.
 To install this configuration file, you need to copy it over to the `/lib/systemd/system` and then enable it with the following commands:
 
-```
-$ sudo systemctl daemon-reload
-$ sudo systemctl enable printer_control.service
+```bash
+sudo cp printer_control.service /lib/systemd/system
+sudo systemctl daemon-reload
+sudo systemctl enable printer_control.service
 ```
 
 After the next boot, it should start the server.
